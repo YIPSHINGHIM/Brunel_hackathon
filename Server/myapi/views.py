@@ -1,10 +1,14 @@
 from django.http import JsonResponse
 from django.shortcuts import render
 
+from .VaR.Stock_data import get_stock_data
+
 
 def getRoutes(request):
 
-    list = [1,2,3,4,5,6,7,8,10]
+    US_STOCK_LIST = ["TSM","GOOGL","TSLA","MSFT","AAPL"]
+    
+    print(get_stock_data.Get_the_stock_portfolio_historical_data_in_the_given_time(US_STOCK_LIST,100))
 
-    return JsonResponse(list,safe=False)
+    return JsonResponse("123",safe=False)
 
