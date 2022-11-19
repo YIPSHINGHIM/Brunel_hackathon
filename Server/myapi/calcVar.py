@@ -1,15 +1,11 @@
 import datetime as dt
 import math
-import os
-import sys
 
 import numpy as np
 import pandas as pd
 import yfinance as yf
 from scipy.stats import norm, t
-
-sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
-
+from .stockData import get_stock_data
 
 class data_initialise:
 
@@ -113,7 +109,7 @@ class parametric_method(data_initialise):
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 
-from Stock_data import Get_the_stock_data
+from .stockData import get_stock_data as Get_the_stock_data
 
 period = 501
 
@@ -157,7 +153,7 @@ def single_stock_parametric_method():
     print('Expected Portfolio Return:      ', round(InitialInvestment*pRet,2))
     print('Value at Risk 95th CI    :      ', round(InitialInvestment*hVaR,2))
 
-single_stock_parametric_method()
+# single_stock_parametric_method()
 
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
