@@ -206,11 +206,9 @@ def single_stock():
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 
-def portfolio():
+def portfolio(US_STOCK_LIST, portfolio_wieights, period):
     # * Testing for portfolio
-
-    US_STOCK_LIST = ["TSM","GOOGL","TSLA","MSFT","AAPL"]
-    portfolio_weights = np.array([0.2,0.15,0.15,0.3,0.1])
+    portfolio_weights = np.array(portfolio_wieights)
 
     portfolio_stock_data = Get_the_stock_data.Get_the_stock_portfolio_historical_data_in_the_given_time(US_STOCK_LIST,period)
 
