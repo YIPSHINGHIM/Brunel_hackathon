@@ -43,7 +43,7 @@ class data_initialise:
 
         # print(portfolio_weights)
 
-        print(temp_df)
+        # print(temp_df)
 
         if len(portfolio_weights) == 1:
             # print("only one stock")
@@ -203,7 +203,7 @@ def get_weight(number_of_share, closing_price):
     return weight
 
 def get_initial(number_of_share, closing_price):
-    return sum(number_of_share[i] * closing_price[i] for i in range(len(number_of_share)))
+    return sum(float(number_of_share[i]) * closing_price[i] for i in range(len(number_of_share)))
 
 # period = 501
 

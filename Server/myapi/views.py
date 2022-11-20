@@ -93,7 +93,8 @@ def Historical_Simulation_view(request):
         portfolio_weights = calcVar.get_weight(number_of_share, closing_price)
         period = 501
         Time = 1
-        InitialInvestment = 10000
+        InitialInvestment = calcVar.get_initial(number_of_share,closing_price)
+        print(InitialInvestment)
 
         data = calcVar.portfolio(stock_list, portfolio_weights, period,Time ,InitialInvestment)
 
@@ -107,7 +108,7 @@ def prediction(request):
 
     if request.method == "POST":
         print("is post request")
-        stock_list ,number_of_share,closing_price = passing_data(request)
+        stock_list ,number_of_share,closing_price,method= passing_data(request)
         # print(request.POST.get('somekey'))
         # data = (request.POST.items())
 
@@ -120,10 +121,14 @@ def prediction(request):
         portfolio_weights = calcVar.get_weight(number_of_share, closing_price)
         period = 501
         Time = 1
-        InitialInvestment = 10000
+        InitialInvestment = calcVar.get_initial(number_of_share,closing_price)
+        print(InitialInvestment)
 
-
-        data = calcVar.portfolio(stock_list, portfolio_weights, period,Time ,InitialInvestment)
+        if method == "Historical_method":
+            data = calcVar.portfolio(stock_list, portfolio_weights, period,Time ,InitialInvestment)
+        
+        # elif method == "parametric_method":
+        #     data = calcVar.single_stock_parametric_method(stock_list,period,Time,InitialInvestment)
 
         print(data)
 
