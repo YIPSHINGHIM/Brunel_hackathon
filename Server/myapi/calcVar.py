@@ -107,7 +107,6 @@ class parametric_method(data_initialise):
 
         return VaR
 
-
 class Monte_Carlo_Simulation_method(data_initialise):
 
     def Monte_Carlo_Simulation(self,Stock_historical_data_df_with_returns):
@@ -188,12 +187,19 @@ class Monte_Carlo_Simulation_method(data_initialise):
         else:
             raise TypeError("Expected returns to be dataframe ot series")
 
-
-
-
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 
 from .stockData import get_stock_data as Get_the_stock_data
+
+
+def get_weight(number_of_share, closing_price): 
+    weight = []
+    for i in range(len(number_of_share)):
+        weight.append(number_of_share[i] * closing_price[i])
+    weight = [round(i/sum(weight), 3) for i in weight]
+
+    return weight
+
 
 period = 501
 
@@ -241,12 +247,13 @@ def portfolio_Monte_Carlo_Simulation(InitialInvestment,US_STOCK_LIST, portfolio_
     print('Value at Risk 95th CI    :      ', round(-VaR,2))
     print('Conditional VaR 95th CI  :      ', round(-CVaR,2))
 
-    return [VaR,CVaR]
+    data = {'VaR':VaR,'CVaR':CVaR}
+
+    return data
 
 # portfolio2()
 
-
-def single_stock_parametric_method():
+def single_stock_parametric_method(US_STOCK_LIST,period,Time,InitialInvestment):
     # * Testing for single stock
 
     US_STOCK_LIST = ["TSLA"]
@@ -259,8 +266,8 @@ def single_stock_parametric_method():
     TSLA_df_with_weights = TSLA_stock_object.add_Portfolio_columns_to_df(TSLA_historical_return_df)
     # print(portfolio_df_with_weights.head())
 
-    Time = 1
-    InitialInvestment = 10000
+    # Time = 1
+    # InitialInvestment = 10000
 
     VaR =(TSLA_stock_object.Calculating_VaR_by_parametric_method(TSLA_df_with_weights,5))
 
@@ -278,11 +285,14 @@ def single_stock_parametric_method():
     print('Expected Portfolio Return:      ', round(InitialInvestment*pRet,2))
     print('Value at Risk 95th CI    :      ', round(InitialInvestment*hVaR,2))
 
+    data = {'Expected_Return':round(InitialInvestment*pRet,2) , 'VaR' : VaR}
+    return data
+
 # single_stock_parametric_method()
 
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
-def single_stock(US_STOCK_LIST, period):
+def single_stock(US_STOCK_LIST, period ,Time,InitialInvestment):
     # * Testing for single stock
 
     # US_STOCK_LIST = ["TSLA"]
@@ -302,9 +312,9 @@ def single_stock(US_STOCK_LIST, period):
     TSLA_df_with_weights = TSLA_stock_object.add_Portfolio_columns_to_df(TSLA_historical_return_df)
     # print(portfolio_df_with_weights.head())
 
-    # 100 days Time Horizon
-    Time = 1
-    InitialInvestment = 10000
+    # 1 days Time Horizon
+    # Time = 1
+    # InitialInvestment = 10000
 
     VaR = (TSLA_stock_object.Calculating_VaR_by_Historical_Simulation(TSLA_df_with_weights['Portfolio'],5))
 
@@ -325,13 +335,18 @@ def single_stock(US_STOCK_LIST, period):
     print('Value at Risk 95th CI    :      ', round(InitialInvestment*hVaR,2))
     print('Conditional VaR 95th CI  :      ', round(InitialInvestment*hVaR,2))
 
-    return [round(InitialInvestment*pRet,2),round(InitialInvestment*hVaR,2),round(InitialInvestment*hVaR,2)]
+    data = {'Expected_return':round(InitialInvestment*pRet,2),
+            'VaR' : round(InitialInvestment*hVaR,2),
+            'CVaR' : round(InitialInvestment*hVaR,2)
+    }
+
+    return data
 
 # single_stock()
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 
-def portfolio(US_STOCK_LIST, portfolio_weights, period):
+def portfolio(US_STOCK_LIST, portfolio_weights, period,Time ,InitialInvestment):
     # * Testing for portfolio
     portfolio_weights = np.array(portfolio_weights)
 
@@ -356,8 +371,8 @@ def portfolio(US_STOCK_LIST, portfolio_weights, period):
 
 
     # 100 days Time Horizon
-    Time = 1
-    InitialInvestment = 10000
+    # Time = 1
+    # InitialInvestment = 10000
 
 
     VaR = (portfolio_stock_object.Calculating_VaR_by_Historical_Simulation(portfolio_df_with_weights['Portfolio'],5))
@@ -376,15 +391,13 @@ def portfolio(US_STOCK_LIST, portfolio_weights, period):
     # print('Value at Risk 95th CI    :      ', round(InitialInvestment*hVaR,2))
     # print('Conditional VaR 95th CI  :      ', round(InitialInvestment*hCVaR,2))
 
-    return [round(InitialInvestment*pRet,2), round(InitialInvestment*hVaR,2), round(InitialInvestment*hCVaR,2)]
+    data = {'Expected_return':round(InitialInvestment*pRet,2),
+            'VaR' : round(InitialInvestment*hVaR,2),
+            'CVaR' : round(InitialInvestment*hVaR,2)
+    }
+
+    return data
 
 # portfolio()
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 
-def get_weight(number_of_share, closing_price): 
-    weight = []
-    for i in range(len(number_of_share)):
-        weight.append(number_of_share[i] * closing_price[i])
-    weight = [round(i/sum(weight), 3) for i in weight]
-
-    return weight
