@@ -46,7 +46,10 @@ stock_weight2.pack(fill=tk.BOTH, side=tk.LEFT, expand=True)
 frame_bot = tk.Frame()
 button1 = tk.Button(master=frame_bot, text="Click when complete", width=60 ,height=8, bg="purple")
 button2 = tk.Button(master=frame_bot, text="Click to clear fields",width=60 ,height=8, bg="purple")
+button3 = tk.Button(master=frame_bot, text="Get the result",width=60 ,height=8, bg="purple")
 
+
+input_dictionary = {}
 def handle_click1(event):
     input[0] = stock_name1.get()
     input[1] = stock_weight1.get()
@@ -58,7 +61,10 @@ def handle_click1(event):
     
     if input[2] != "":
         input_dictionary[input[2]] = input[3]
-    print(input_dictionary)
+
+        print(input_dictionary)
+
+
 #button clears text for ease of use
 def handle_click2(event):
     input[0] = stock_name1.get()
@@ -71,13 +77,27 @@ def handle_click2(event):
     stock_weight2.delete(0, len(input[3]))
     stock_name1.delete(0, len(input[0]))
 
+
+
+def handle_click3(event):
+    print(input_dictionary)
+
+
 button2.bind("<Button-1>", handle_click2)
 button1.bind("<Button-1>", handle_click1)
+button3.bind("<Button-1>", handle_click3)
+
 button1.pack(fill=tk.BOTH, side=tk.LEFT, expand=True)
 button2.pack(fill=tk.BOTH, side=tk.LEFT, expand=True)
+button3.pack(fill=tk.BOTH, side=tk.LEFT, expand=True)
 
 Terminal = tk.Text(width=100, height = 10)
 Terminal.pack()
+
+
+
+
+
 
 #textframe = tk.Frame(master=window)
 #Terminal1 = tk.Text(master = textframe, width=100, height = 130)
