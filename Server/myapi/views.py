@@ -18,6 +18,13 @@ closing_price = [300,400,500,600,700]
 def getRoutes(request):
 
     get_stock_data.Get_the_stock_portfolio_historical_data_in_the_given_time(US_STOCK_LIST,100)
+
+    portfolio_weights = calcVar.get_weight(number_of_share, closing_price)
+    period = 501
+    Time = 1
+    InitialInvestment = 10000
+    
+    print('\n\n', calcVar.portfolio(US_STOCK_LIST, portfolio_weights, period,Time ,InitialInvestment), '\n')
     # calcVar.single_stock_parametric_method()
 
     # print(f'\n\nnumber of share: {number_of_share}')
