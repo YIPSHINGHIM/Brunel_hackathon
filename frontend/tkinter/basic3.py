@@ -39,11 +39,11 @@ frame_mid = tk.Frame()
 stock_name1 = tk.Entry(master=frame_mid, width=30)
 stock_name1.pack(fill=tk.BOTH, side=tk.LEFT, expand=True)
 
-stock_name2 = tk.Entry(master=frame_mid, width=30)
-stock_name2.pack(fill=tk.BOTH, side=tk.LEFT, expand=True)
-
 stock_weight1 = tk.Entry(master=frame_mid, width=30)
 stock_weight1.pack(fill=tk.BOTH, side=tk.LEFT, expand=True)
+
+stock_name2 = tk.Entry(master=frame_mid, width=30)
+stock_name2.pack(fill=tk.BOTH, side=tk.LEFT, expand=True)
 
 stock_weight2 = tk.Entry(master=frame_mid, width=30)
 stock_weight2.pack(fill=tk.BOTH, side=tk.LEFT, expand=True)
@@ -54,24 +54,29 @@ button1 = tk.Button(master=frame_bot, text="Click when complete", width=60 ,heig
 button2 = tk.Button(master=frame_bot, text="Click to clear fields",width=60 ,height=8, bg="purple")
 
 def handle_click1(event):
+    
     input[0] = stock_name1.get()
     input[1] = stock_weight1.get()
     input[2] = stock_name2.get()
     input[3] = stock_weight2.get()
 
+    Terminal.delete("1.0", "1.28")
+
     if input[0] != "":
-        if (input[0] in text_file.read()):
+        if (input[0] in text_file.read()) or True:
             input_dictionary[input[0]] = input[1]
         else:
             Terminal.delete("1.0", "1.28")
             Terminal.insert("1.0", "Error, invalid stock name(1)")
 
     if input[2] != "":
-        if (input[2] in text_file.read()):
+        if (input[2] in text_file.read()) or True:
             input_dictionary[input[2]] = input[3]
         else:
-            Terminal.delete("1.0", "1.28")
+            
             Terminal.insert("1.0", "Error, invalid stock name(2)")
+    
+    print(input_dictionary)
 
 #button clears text for ease of use
 def handle_click2(event):
@@ -80,11 +85,11 @@ def handle_click2(event):
     input[2] = stock_name2.get()
     input[3] = stock_weight2.get()
     
-    stock_name1.delete(0, len(input[0]))
-    stock_name2.delete(0, len(input[1]))
-    stock_weight1.delete(0, len(input[2]))
+    stock_weight1.delete(0, len(input[1]))
+    stock_name2.delete(0, len(input[2]))
     stock_weight2.delete(0, len(input[3]))
-
+    stock_name1.delete(0, len(input[0]))
+    
 button2.bind("<Button-1>", handle_click2)
 button1.bind("<Button-1>", handle_click1)
 button1.pack(fill=tk.BOTH, side=tk.LEFT, expand=True)
