@@ -205,6 +205,45 @@ period = 501
 # print(portfolio_historical_return_df.head())
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+
+def portfolio2():
+
+    InitialInvestment = 10000
+    # * Testing for portfolio
+
+    US_STOCK_LIST = ["TSM","GOOGL","TSLA","MSFT","AAPL"]
+    portfolio_weights = np.array([0.2,0.15,0.15,0.3,0.2])
+
+    portfolio_stock_data = Get_the_stock_data.Get_the_stock_portfolio_historical_data_in_the_given_time(US_STOCK_LIST,period)
+
+    # print(portfolio_stock_data.head())
+
+    portfolio_stock_object = Monte_Carlo_Simulation_method(Stock_historical_data_df = portfolio_stock_data,portfolio_weights=portfolio_weights)
+
+    portfolio_historical_return_df = (portfolio_stock_object.Calculating_daily_portfolio_Returns())
+
+    portReturns = (portfolio_stock_object.Monte_Carlo_Simulation(portfolio_historical_return_df))
+    print(portReturns)
+
+    quantile_95_for_VaR =portfolio_stock_object.Calculating_VaR_by_Monte_Carlo_Simulation(portReturns,5)
+    # print(quantile_95_for_VaR)
+
+    quantile_95_for_CVaR =portfolio_stock_object.Calculating_CVaR_by_Monte_Carlo_Simulation(portReturns,5)
+    # print(quantile_95_for_CVaR)
+    
+    VaR = InitialInvestment - quantile_95_for_VaR
+    print(VaR)
+
+    CVaR = InitialInvestment - quantile_95_for_CVaR
+    print(CVaR)
+
+    print(f'For portfolio : {US_STOCK_LIST}')
+    print('Value at Risk 95th CI    :      ', round(-VaR,2))
+    print('Conditional VaR 95th CI  :      ', round(-CVaR,2))
+
+# portfolio2()
+
+
 def single_stock_parametric_method():
     # * Testing for single stock
 
