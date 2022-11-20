@@ -256,7 +256,7 @@ def portfolio_Monte_Carlo_Simulation(InitialInvestment,US_STOCK_LIST, portfolio_
 def single_stock_parametric_method(US_STOCK_LIST,period,Time,InitialInvestment):
     # * Testing for single stock
 
-    US_STOCK_LIST = ["TSLA"]
+    # US_STOCK_LIST = ["TSLA"]
     portfolio_stock_data = Get_the_stock_data.Get_the_stock_portfolio_historical_data_in_the_given_time(US_STOCK_LIST,period)
 
     TSLA_stock_object = parametric_method(portfolio_stock_data)

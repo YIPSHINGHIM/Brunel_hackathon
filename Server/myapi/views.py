@@ -1,10 +1,5 @@
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
-
-84
-
-
-from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 
 from . import calcVar
@@ -24,32 +19,50 @@ def getRoutes(request):
     Time = 1
     InitialInvestment = 10000
     
-    print('\n\n', calcVar.portfolio(US_STOCK_LIST, portfolio_weights, period,Time ,InitialInvestment), '\n')
-    # calcVar.single_stock_parametric_method()
 
-    # print(f'\n\nnumber of share: {number_of_share}')
-    # print(f'closing price: {closing_price}')
-    # weight = calcVar.get_weight(number_of_share, closing_price)
-    # print(f'weight: {weight}\n')
+    data = calcVar.portfolio(US_STOCK_LIST, portfolio_weights, period,Time ,InitialInvestment)
 
-    # pfl = calcVar.portfolio(US_STOCK_LIST, weight, 501)
+    print('\n\n',data , '\n')
 
-    # print(f'For portfolio : {US_STOCK_LIST}')
-    # print('Expected Portfolio Return:      ', pfl[0])
-    # print('Value at Risk 95th CI    :      ', pfl[1])
-    # print('Conditional VaR 95th CI  :      ', pfl[2])
+    return JsonResponse(data,safe=False)
 
-    # calcVar.portfolio(US_STOCK_LIST, weight, 501)
-    # calcVar.portfolio_Monte_Carlo_Simulation(10000,US_STOCK_LIST,weight)
+def passing_data(request):
+    data = (request.POST.items())
 
-    return JsonResponse("123",safe=False)
+    stock_list = []
+    number_of_share = []
+
+    for key,value in data:
+        # print(f'key = {key}')
+        stock_list.append(key)
+        # print(f'value = {value}')
+        number_of_share.append(value)
+
+    df = get_stock_data.Get_the_stock_portfolio_historical_data_in_the_given_time(stock_list,1)  
+
+    closing_price = (df.iloc[0].tolist())
+
+    return stock_list ,number_of_share,closing_price
+
 
 @csrf_exempt
 def test_post_request(request):
     if request.method == "POST":
         print("is post request")
-        print(request.POST.get('somekey'))
+        stock_list ,number_of_share,closing_price = passing_data(request)
+        # print(request.POST.get('somekey'))
+        # data = (request.POST.items())
+
+        print(stock_list)
+        print(number_of_share)
+        print(closing_price)
 
 
-    return JsonResponse("qweqweqwe",safe=False)
+    return JsonResponse("asd",safe=False)
 
+
+
+# * Historical_Simulation
+@csrf_exempt
+def Historical_Simulation_view(request):
+    pass
