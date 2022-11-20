@@ -5,7 +5,9 @@ import numpy as np
 import pandas as pd
 import yfinance as yf
 from scipy.stats import norm, t
+
 from .stockData import get_stock_data
+
 
 class data_initialise:
 
@@ -104,6 +106,88 @@ class parametric_method(data_initialise):
         # print(VaR)
 
         return VaR
+
+
+class Monte_Carlo_Simulation_method(data_initialise):
+
+    def Monte_Carlo_Simulation(self,Stock_historical_data_df_with_returns):
+
+
+        Stock_historical_data_df_with_returns = Stock_historical_data_df_with_returns.copy()
+        InitialInvestment = 10000
+        weights = self.portfolio_weights
+
+        # number of simulation
+        mc_sims = 1000
+        # timeframes in days
+        T = 1
+        InitialInvestment = 10000
+
+        # print(Stock_historical_data_df_with_returns)
+
+        mean_portfolio_historical_return_df = Stock_historical_data_df_with_returns.mean()
+
+        # print(mean_portfolio_historical_return_df)
+
+        covMatrix_portfolio_historical_return_df = Stock_historical_data_df_with_returns.cov()
+        # print(covMatrix_portfolio_historical_return_df)
+
+        MeanM = np.full(shape=(T,len(weights)) ,fill_value=mean_portfolio_historical_return_df)
+
+        MeanM = MeanM.T
+
+        portfolio_sims = np.full(shape=(T,mc_sims) , fill_value=0.0)
+        # print(np.random.normal(size=(T,len(weights))))
+        
+        # Monte Carlo loop
+        for m in range(0,mc_sims):
+            Z = np.random.normal(size=(T,len(weights)))
+            L = np.linalg.cholesky(covMatrix_portfolio_historical_return_df)
+
+            daily_returns = MeanM + np.inner(L,Z)
+            portfolio_sims[:,m] = np.cumprod(np.inner(weights,daily_returns.T) + 1 )*InitialInvestment  
+
+
+        # plt.plot(portfolio_sims)
+        # plt.show()
+
+        return pd.Series(portfolio_sims[-1,:])
+
+
+        
+    def Calculating_VaR_by_Monte_Carlo_Simulation(self,Stock_historical_data_df_with_returns:pd.DataFrame,confidence_level:int):
+        """
+        Read in a pandas dataframe of returns / a pandas series of returns 
+        Output the CVaR for dataframe and series
+        """
+        
+        if isinstance(Stock_historical_data_df_with_returns,pd.Series):
+            return np.percentile(Stock_historical_data_df_with_returns ,confidence_level)
+
+        elif isinstance(Stock_historical_data_df_with_returns,pd.DataFrame):
+            return Stock_historical_data_df_with_returns.aggregate(self.Calculating_VaR_by_Historical_Simulation,axis=0,confidence_level = confidence_level)
+
+        else:
+            raise TypeError("Expected returns to be dataframe ot series")
+
+
+    def Calculating_CVaR_by_Monte_Carlo_Simulation(self,Stock_historical_data_df_with_returns:pd.DataFrame,confidence_level:int):
+        """
+        Read in a pandas dataframe of returns / a pandas series of returns 
+        Output the CVaR for dataframe and series
+        """
+        
+        if isinstance(Stock_historical_data_df_with_returns,pd.Series):
+            belowVaR = Stock_historical_data_df_with_returns <= self.Calculating_VaR_by_Monte_Carlo_Simulation(Stock_historical_data_df_with_returns,confidence_level)
+
+            return Stock_historical_data_df_with_returns[belowVaR].mean()
+
+        elif isinstance(Stock_historical_data_df_with_returns,pd.DataFrame):
+            return Stock_historical_data_df_with_returns.aggregate(self.Calculating_VaR_by_Monte_Carlo_Simulation,axis=0,confidence_level = confidence_level)
+
+        else:
+            raise TypeError("Expected returns to be dataframe ot series")
+
 
 
 
@@ -224,7 +308,6 @@ def portfolio():
 
     mean_portfolio_historical_return_df = portfolio_historical_return_df.mean()
     covMatrix_portfolio_historical_return_df = portfolio_historical_return_df.cov()
-
 
 
     # print(portfolio_historical_return_df.head())
