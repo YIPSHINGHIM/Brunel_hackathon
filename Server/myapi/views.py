@@ -1,8 +1,10 @@
 from django.http import JsonResponse
 from django.shortcuts import render
 
-from .stockData import get_stock_data
 from . import calcVar
+from .stockData import get_stock_data
+
+
 def getRoutes(request):
 
     US_STOCK_LIST = ["TSM","GOOGL","TSLA","MSFT","AAPL"]
@@ -22,6 +24,9 @@ def getRoutes(request):
     print('Expected Portfolio Return:      ', pfl[0])
     print('Value at Risk 95th CI    :      ', pfl[1])
     print('Conditional VaR 95th CI  :      ', pfl[2])
+
+    calcVar.portfolio(US_STOCK_LIST, weight, 501)
+    calcVar.portfolio_Monte_Carlo_Simulation(10000,US_STOCK_LIST,weight)
 
     return JsonResponse("123",safe=False)
 
