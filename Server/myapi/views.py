@@ -71,7 +71,6 @@ def test_post_request(request):
         print(closing_price)
 
 
-
     return JsonResponse("asd",safe=False)
 
 
