@@ -200,8 +200,10 @@ def get_weight(number_of_share, closing_price):
 
     return weight
 
+def get_initial(number_of_share, closing_price):
+    return sum(number_of_share[i] * closing_price[i] for i in range(len(number_of_share)))
 
-period = 501
+# period = 501
 
 # * weight of the portfolio 
 # portfolio_weights = np.random.random(len(portfolio_historical_return_df.columns))

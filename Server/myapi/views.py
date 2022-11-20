@@ -17,14 +17,17 @@ def getRoutes(request):
     portfolio_weights = calcVar.get_weight(number_of_share, closing_price)
     period = 501
     Time = 1
-    InitialInvestment = 10000
+
+    InitialInvestment = calcVar.get_initial(number_of_share, closing_price)
     
 
     data = calcVar.portfolio(US_STOCK_LIST, portfolio_weights, period,Time ,InitialInvestment)
 
+    print('\nportfolio weights: ', portfolio_weights, '\n')
+    print('\nInitial investment: ', InitialInvestment, '\n')
     print('\n\n',data , '\n')
 
-    return JsonResponse(data,safe=False)
+    return JsonResponse([('portfolio weights: ', portfolio_weights), ('Initial investment: ', InitialInvestment),data], safe=False)
 
 def passing_data(request):
     data = (request.POST.items())
@@ -56,6 +59,7 @@ def test_post_request(request):
         print(stock_list)
         print(number_of_share)
         print(closing_price)
+
 
 
     return JsonResponse("asd",safe=False)
