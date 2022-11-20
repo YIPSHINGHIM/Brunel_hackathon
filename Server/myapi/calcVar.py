@@ -20,6 +20,11 @@ class data_initialise:
         std = np.sqrt( np.dot(weights.T, np.dot(covMatrix, weights)) ) * np.sqrt(Time)
         return returns, std
 
+    def portfolioPerformance2(self,weights, meanReturns, covMatrix, Time):
+        returns = np.sum(meanReturns*weights)*Time
+        # std = np.sqrt( np.dot(weights.T, np.dot(covMatrix, weights)) ) * np.sqrt(Time)
+        return returns
+
 
     def Calculating_daily_portfolio_Returns(self):
 
@@ -111,18 +116,18 @@ class parametric_method(data_initialise):
 
 class Monte_Carlo_Simulation_method(data_initialise):
 
-    def Monte_Carlo_Simulation(self,Stock_historical_data_df_with_returns):
+    def Monte_Carlo_Simulation(self,Stock_historical_data_df_with_returns,InitialInvestment):
 
 
         Stock_historical_data_df_with_returns = Stock_historical_data_df_with_returns.copy()
-        InitialInvestment = 10000
+        # InitialInvestment = 10000
         weights = self.portfolio_weights
 
         # number of simulation
         mc_sims = 1000
         # timeframes in days
         T = 1
-        InitialInvestment = 10000
+        # InitialInvestment = 10000
 
         # print(Stock_historical_data_df_with_returns)
 
@@ -216,8 +221,8 @@ def get_initial(number_of_share, closing_price):
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 
-def portfolio_Monte_Carlo_Simulation(InitialInvestment,US_STOCK_LIST, portfolio_weights):
-
+def portfolio_Monte_Carlo_Simulation(US_STOCK_LIST, portfolio_weights,period,InitialInvestment,):
+    print(f'InitialInvestment : {InitialInvestment}')
     # InitialInvestment = 10000
     # * Testing for portfolio
 
@@ -232,8 +237,8 @@ def portfolio_Monte_Carlo_Simulation(InitialInvestment,US_STOCK_LIST, portfolio_
 
     portfolio_historical_return_df = (portfolio_stock_object.Calculating_daily_portfolio_Returns())
 
-    portReturns = (portfolio_stock_object.Monte_Carlo_Simulation(portfolio_historical_return_df))
-    # print(portReturns)
+    portReturns = (portfolio_stock_object.Monte_Carlo_Simulation(portfolio_historical_return_df,InitialInvestment))
+    print(portReturns)
 
     quantile_95_for_VaR =portfolio_stock_object.Calculating_VaR_by_Monte_Carlo_Simulation(portReturns,5)
     # print(quantile_95_for_VaR)
@@ -247,11 +252,11 @@ def portfolio_Monte_Carlo_Simulation(InitialInvestment,US_STOCK_LIST, portfolio_
     CVaR = InitialInvestment - quantile_95_for_CVaR
     # print(CVaR)
 
-    print(f'For portfolio : {US_STOCK_LIST}')
-    print('Value at Risk 95th CI    :      ', round(-VaR,2))
-    print('Conditional VaR 95th CI  :      ', round(-CVaR,2))
+    # print(f'For portfolio : {US_STOCK_LIST}')
+    # print('Value at Risk 95th CI    :      ', round(-VaR,2))
+    # print('Conditional VaR 95th CI  :      ', round(-CVaR,2))
 
-    data = {'VaR':VaR,'CVaR':CVaR}
+    data = {'VaR':round(VaR,2),'CVaR':round(CVaR,2)}
 
     return data
 
@@ -283,13 +288,13 @@ def single_stock_parametric_method(US_STOCK_LIST,period,Time,InitialInvestment):
     covMatrix_portfolio_historical_return_df = TSLA_historical_return_df.cov()
 
     
-    pRet, pStd = TSLA_stock_object.portfolioPerformance(portfolio_weights, mean_portfolio_historical_return_df, covMatrix_portfolio_historical_return_df, Time) 
+    pRet = TSLA_stock_object.portfolioPerformance2(portfolio_weights, mean_portfolio_historical_return_df, covMatrix_portfolio_historical_return_df, Time) 
 
-    print(f'For single stock : {US_STOCK_LIST}')
-    print('Expected Portfolio Return:      ', round(InitialInvestment*pRet,2))
-    print('Value at Risk 95th CI    :      ', round(InitialInvestment*hVaR,2))
+    # print(f'For single stock : {US_STOCK_LIST}')
+    # print('Expected Portfolio Return:      ', round(InitialInvestment*pRet,2))
+    # print('Value at Risk 95th CI    :      ', round(InitialInvestment*hVaR,2))
 
-    data = {'Expected_Return':round(InitialInvestment*pRet,2) , 'VaR' : VaR}
+    data = {'Expected_Return':round(InitialInvestment*pRet,2) , 'VaR' : round(InitialInvestment*VaR,2)}
     return data
 
 # single_stock_parametric_method()

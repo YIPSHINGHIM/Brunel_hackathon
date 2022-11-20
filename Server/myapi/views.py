@@ -112,23 +112,28 @@ def prediction(request):
         # print(request.POST.get('somekey'))
         # data = (request.POST.items())
 
-        print(stock_list)
-        print(type(number_of_share[0]))
-        print(type(closing_price[0]))
+        # print(stock_list)
+        # print(type(number_of_share[0]))
+        # print(type(closing_price[0]))
 
-        get_stock_data.Get_the_stock_portfolio_historical_data_in_the_given_time(stock_list,100)
+        # get_stock_data.Get_the_stock_portfolio_historical_data_in_the_given_time(stock_list,100)
 
         portfolio_weights = calcVar.get_weight(number_of_share, closing_price)
         period = 501
         Time = 1
         InitialInvestment = calcVar.get_initial(number_of_share,closing_price)
-        print(InitialInvestment)
+        # print(InitialInvestment)
 
         if method == "Historical_method":
             data = calcVar.portfolio(stock_list, portfolio_weights, period,Time ,InitialInvestment)
         
-        # elif method == "parametric_method":
-        #     data = calcVar.single_stock_parametric_method(stock_list,period,Time,InitialInvestment)
+        elif method == "parametric_method":
+            data = calcVar.single_stock_parametric_method(stock_list,period,Time,InitialInvestment)
+            data['CVaR'] = None
+
+        elif method == "Monte_Carlo_method":
+            data = calcVar.portfolio_Monte_Carlo_Simulation(stock_list, portfolio_weights, period,InitialInvestment)
+            data['Expected_return'] = None
 
         print(data)
 
