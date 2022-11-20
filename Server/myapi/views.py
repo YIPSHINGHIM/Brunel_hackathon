@@ -19,6 +19,12 @@ def getRoutes(request):
     weight = calcVar.get_weight(number_of_share, closing_price)
     print(f'weight: {weight}\n')
 
+    pfl = calcVar.portfolio(US_STOCK_LIST, weight, 501)
+    print(f'For portfolio : {US_STOCK_LIST}')
+    print('Expected Portfolio Return:      ', pfl[0])
+    print('Value at Risk 95th CI    :      ', pfl[1])
+    print('Conditional VaR 95th CI  :      ', pfl[2])
+
     calcVar.portfolio(US_STOCK_LIST, weight, 501)
     calcVar.portfolio_Monte_Carlo_Simulation(10000,US_STOCK_LIST,weight)
 
