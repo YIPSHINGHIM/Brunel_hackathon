@@ -1,9 +1,15 @@
 import tkinter as tk
 from PIL import ImageTk, Image
 
+#
+#Terminal.insert("1.0", "WHATEVER HERE")
+#
+
 window = tk.Tk() #creates single window for application gui
 input_dictionary = {} #stores inputs to be sent to database with API
 input = ["", "", "", ""] #array to seperate inputs
+
+text_file = open("frontend/tkinter/fileShort.txt")
 
 #creates top title
 frame_title1 = tk.Frame()
@@ -54,10 +60,18 @@ def handle_click1(event):
     input[3] = stock_weight2.get()
 
     if input[0] != "":
-        input_dictionary[input[0]] = input[1]
-    
+        if (input[0] in text_file.read()):
+            input_dictionary[input[0]] = input[1]
+        else:
+            Terminal.delete("1.0", "1.28")
+            Terminal.insert("1.0", "Error, invalid stock name(1)")
+
     if input[2] != "":
-        input_dictionary[input[2]] = input[3]
+        if (input[2] in text_file.read()):
+            input_dictionary[input[2]] = input[3]
+        else:
+            Terminal.delete("1.0", "1.28")
+            Terminal.insert("1.0", "Error, invalid stock name(2)")
 
 #button clears text for ease of use
 def handle_click2(event):
@@ -78,11 +92,6 @@ button2.pack(fill=tk.BOTH, side=tk.LEFT, expand=True)
 
 Terminal = tk.Text(width=100, height = 10)
 Terminal.pack()
-
-#textframe = tk.Frame(master=window)
-#Terminal1 = tk.Text(master = textframe, width=100, height = 130)
-#Terminal1.pack()
-#textframe.pack()
 
 #load gui
 frame_title1.pack()
