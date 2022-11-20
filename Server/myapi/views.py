@@ -1,55 +1,130 @@
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
-
-84
-
-
-from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 
 from . import calcVar
 from .stockData import get_stock_data
 
-US_STOCK_LIST = ["TSM","GOOGL","TSLA","MSFT","AAPL"]
-number_of_share = [1, 2, 3, 4, 5]
-closing_price = [300,400,500,600,700]
+# US_STOCK_LIST = ["TSM","GOOGL","TSLA","MSFT","AAPL"]
+# number_of_share = [1, 2, 3, 4, 5]
+# closing_price = [300,400,500,600,700]
 
 
 def getRoutes(request):
+
+    US_STOCK_LIST = ["TSM","GOOGL","TSLA","MSFT","AAPL"]
+    number_of_share = [1, 2, 3, 4, 5]
+    closing_price = [300,400,500,600,700]
 
     get_stock_data.Get_the_stock_portfolio_historical_data_in_the_given_time(US_STOCK_LIST,100)
 
     portfolio_weights = calcVar.get_weight(number_of_share, closing_price)
     period = 501
     Time = 1
-    InitialInvestment = 10000
+
+    InitialInvestment = calcVar.get_initial(number_of_share, closing_price)
     
-    print('\n\n', calcVar.portfolio(US_STOCK_LIST, portfolio_weights, period,Time ,InitialInvestment), '\n')
-    # calcVar.single_stock_parametric_method()
 
-    # print(f'\n\nnumber of share: {number_of_share}')
-    # print(f'closing price: {closing_price}')
-    # weight = calcVar.get_weight(number_of_share, closing_price)
-    # print(f'weight: {weight}\n')
+    data = calcVar.portfolio(US_STOCK_LIST, portfolio_weights, period,Time ,InitialInvestment)
 
-    # pfl = calcVar.portfolio(US_STOCK_LIST, weight, 501)
+    print('\nportfolio weights: ', portfolio_weights, '\n')
+    print('\nInitial investment: ', InitialInvestment, '\n')
+    print('\n\n',data , '\n')
 
-    # print(f'For portfolio : {US_STOCK_LIST}')
-    # print('Expected Portfolio Return:      ', pfl[0])
-    # print('Value at Risk 95th CI    :      ', pfl[1])
-    # print('Conditional VaR 95th CI  :      ', pfl[2])
+    return JsonResponse([('portfolio weights: ', portfolio_weights), ('Initial investment: ', InitialInvestment),data], safe=False)
 
-    # calcVar.portfolio(US_STOCK_LIST, weight, 501)
-    # calcVar.portfolio_Monte_Carlo_Simulation(10000,US_STOCK_LIST,weight)
+def passing_data(request):
+    data = (request.POST.items())
 
-    return JsonResponse("123",safe=False)
+    stock_list = []
+    number_of_share = []
+
+    for key,value in data:
+        # print(f'key = {key}')
+        stock_list.append(key)
+        # print(f'value = {value}')
+        number_of_share.append(value)
+
+    method = number_of_share[-1]
+    stock_list = stock_list[:-1]
+    number_of_share = number_of_share[:-1]
+
+
+
+    df = get_stock_data.Get_the_stock_portfolio_historical_data_in_the_given_time(stock_list,1)  
+
+    closing_price = (df.iloc[0].tolist())
+
+    return stock_list ,number_of_share,closing_price,method
+
 
 @csrf_exempt
 def test_post_request(request):
     if request.method == "POST":
         print("is post request")
-        print(request.POST.get('somekey'))
+        stock_list ,number_of_share,closing_price = passing_data(request)
+        # print(request.POST.get('somekey'))
+        # data = (request.POST.items())
+
+        print(stock_list)
+        print(number_of_share)
+        print(closing_price)
 
 
-    return JsonResponse("qweqweqwe",safe=False)
+    return JsonResponse("asd",safe=False)
 
+
+# * Historical_Simulation
+@csrf_exempt
+def Historical_Simulation_view(request):
+
+    if request.method == "POST":
+        print("is post request")
+        stock_list ,number_of_share,closing_price ,method= passing_data(request)
+        # print(request.POST.get('somekey'))
+        # data = (request.POST.items())
+        print(method)
+        print(stock_list)
+        print(type(number_of_share[0]))
+        print(type(closing_price[0]))
+
+        get_stock_data.Get_the_stock_portfolio_historical_data_in_the_given_time(stock_list,100)
+
+        portfolio_weights = calcVar.get_weight(number_of_share, closing_price)
+        period = 501
+        Time = 1
+        InitialInvestment = 10000
+
+        data = calcVar.portfolio(stock_list, portfolio_weights, period,Time ,InitialInvestment)
+
+        print(data)
+
+    return JsonResponse(data,safe=False)
+
+# * Historical_Simulation
+@csrf_exempt
+def prediction(request):
+
+    if request.method == "POST":
+        print("is post request")
+        stock_list ,number_of_share,closing_price = passing_data(request)
+        # print(request.POST.get('somekey'))
+        # data = (request.POST.items())
+
+        print(stock_list)
+        print(type(number_of_share[0]))
+        print(type(closing_price[0]))
+
+        get_stock_data.Get_the_stock_portfolio_historical_data_in_the_given_time(stock_list,100)
+
+        portfolio_weights = calcVar.get_weight(number_of_share, closing_price)
+        period = 501
+        Time = 1
+        InitialInvestment = 10000
+
+
+        data = calcVar.portfolio(stock_list, portfolio_weights, period,Time ,InitialInvestment)
+
+        print(data)
+
+    return JsonResponse(data,safe=False)

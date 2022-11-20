@@ -43,6 +43,8 @@ class data_initialise:
 
         # print(portfolio_weights)
 
+        print(temp_df)
+
         if len(portfolio_weights) == 1:
             # print("only one stock")
             temp_df.rename({f'{temp_df.columns[0]}' : 'Portfolio'},axis=1, inplace=True)
@@ -195,13 +197,15 @@ from .stockData import get_stock_data as Get_the_stock_data
 def get_weight(number_of_share, closing_price): 
     weight = []
     for i in range(len(number_of_share)):
-        weight.append(number_of_share[i] * closing_price[i])
+        weight.append(float(number_of_share[i]) * closing_price[i])
     weight = [round(i/sum(weight), 3) for i in weight]
 
     return weight
 
+def get_initial(number_of_share, closing_price):
+    return sum(number_of_share[i] * closing_price[i] for i in range(len(number_of_share)))
 
-period = 501
+# period = 501
 
 # * weight of the portfolio 
 # portfolio_weights = np.random.random(len(portfolio_historical_return_df.columns))
@@ -256,7 +260,7 @@ def portfolio_Monte_Carlo_Simulation(InitialInvestment,US_STOCK_LIST, portfolio_
 def single_stock_parametric_method(US_STOCK_LIST,period,Time,InitialInvestment):
     # * Testing for single stock
 
-    US_STOCK_LIST = ["TSLA"]
+    # US_STOCK_LIST = ["TSLA"]
     portfolio_stock_data = Get_the_stock_data.Get_the_stock_portfolio_historical_data_in_the_given_time(US_STOCK_LIST,period)
 
     TSLA_stock_object = parametric_method(portfolio_stock_data)
