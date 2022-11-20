@@ -1,9 +1,18 @@
 import tkinter as tk
 from PIL import ImageTk, Image
 
+import requests
+
+
+#
+#Terminal.insert("1.0", "WHATEVER HERE")
+#
+
 window = tk.Tk() #creates single window for application gui
 input_dictionary = {} #stores inputs to be sent to database with API
 input = ["", "", "", ""] #array to seperate inputs
+
+text_file = open("frontend/tkinter/fileShort.txt")
 
 #creates top title
 frame_title1 = tk.Frame()
@@ -51,18 +60,29 @@ button3 = tk.Button(master=frame_bot, text="Get the result",width=60 ,height=8, 
 
 input_dictionary = {}
 def handle_click1(event):
+    
     input[0] = stock_name1.get()
     input[1] = stock_weight1.get()
     input[2] = stock_name2.get()
     input[3] = stock_weight2.get()
 
-    if input[0] != "":
-        input_dictionary[input[0]] = input[1]
-    
-    if input[2] != "":
-        input_dictionary[input[2]] = input[3]
+    Terminal.delete("1.0", "1.28")
 
-        print(input_dictionary)
+    if input[0] != "":
+        if (input[0] in text_file.read()) or True:
+            input_dictionary[input[0]] = input[1]
+        else:
+            Terminal.delete("1.0", "1.28")
+            Terminal.insert("1.0", "Error, invalid stock name(1)")
+
+    if input[2] != "":
+        if (input[2] in text_file.read()) or True:
+            input_dictionary[input[2]] = input[3]
+        else:
+            
+            Terminal.insert("1.0", "Error, invalid stock name(2)")
+    
+    print(input_dictionary)
 
 
 #button clears text for ease of use
@@ -79,8 +99,17 @@ def handle_click2(event):
 
 
 
+
+
 def handle_click3(event):
-    print(input_dictionary)
+    # print(input_dictionary)
+
+    url = 'http://127.0.0.1:8000/prediction'
+    x = requests.post(url,data=input_dictionary)
+    input_dictionary['method'] = "Historical_method"
+    print(x.text)
+
+    Terminal.insert("1.0",x.text)
 
 
 button2.bind("<Button-1>", handle_click2)
@@ -94,15 +123,6 @@ button3.pack(fill=tk.BOTH, side=tk.LEFT, expand=True)
 Terminal = tk.Text(width=100, height = 10)
 Terminal.pack()
 
-
-
-
-
-
-#textframe = tk.Frame(master=window)
-#Terminal1 = tk.Text(master = textframe, width=100, height = 130)
-#Terminal1.pack()
-#textframe.pack()
 
 #load gui
 frame_title1.pack()
