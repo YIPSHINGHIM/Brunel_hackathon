@@ -241,7 +241,7 @@ def portfolio_Monte_Carlo_Simulation(InitialInvestment,US_STOCK_LIST, portfolio_
     print('Value at Risk 95th CI    :      ', round(-VaR,2))
     print('Conditional VaR 95th CI  :      ', round(-CVaR,2))
 
-    return VaR,CVaR
+    return [VaR,CVaR]
 
 # portfolio2()
 
@@ -282,10 +282,10 @@ def single_stock_parametric_method():
 
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
-def single_stock():
+def single_stock(US_STOCK_LIST, period):
     # * Testing for single stock
 
-    US_STOCK_LIST = ["TSLA"]
+    # US_STOCK_LIST = ["TSLA"]
     portfolio_stock_data = Get_the_stock_data.Get_the_stock_portfolio_historical_data_in_the_given_time(US_STOCK_LIST,period)
 
     # print(portfolio_stock_data.head())
@@ -299,14 +299,12 @@ def single_stock():
     mean_portfolio_historical_return_df = TSLA_historical_return_df.mean()
     covMatrix_portfolio_historical_return_df = TSLA_historical_return_df.cov()
 
-
     TSLA_df_with_weights = TSLA_stock_object.add_Portfolio_columns_to_df(TSLA_historical_return_df)
     # print(portfolio_df_with_weights.head())
 
     # 100 days Time Horizon
     Time = 1
     InitialInvestment = 10000
-
 
     VaR = (TSLA_stock_object.Calculating_VaR_by_Historical_Simulation(TSLA_df_with_weights['Portfolio'],5))
 
@@ -325,7 +323,9 @@ def single_stock():
 
     print('Expected Portfolio Return:      ', round(InitialInvestment*pRet,2))
     print('Value at Risk 95th CI    :      ', round(InitialInvestment*hVaR,2))
-    print('Conditional VaR 95th CI  :      ', round(InitialInvestment*hCVaR,2))
+    print('Conditional VaR 95th CI  :      ', round(InitialInvestment*hVaR,2))
+
+    return [round(InitialInvestment*pRet,2),round(InitialInvestment*hVaR,2),round(InitialInvestment*hVaR,2)]
 
 # single_stock()
 
