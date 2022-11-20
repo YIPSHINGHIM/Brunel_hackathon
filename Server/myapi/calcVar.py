@@ -41,7 +41,7 @@ class data_initialise:
 
         portfolio_weights = self.portfolio_weights
 
-        print(portfolio_weights)
+        # print(portfolio_weights)
 
         if len(portfolio_weights) == 1:
             # print("only one stock")
@@ -329,9 +329,9 @@ def single_stock():
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 
-def portfolio(US_STOCK_LIST, portfolio_wieights, period):
+def portfolio(US_STOCK_LIST, portfolio_weights, period):
     # * Testing for portfolio
-    portfolio_weights = np.array(portfolio_wieights)
+    portfolio_weights = np.array(portfolio_weights)
 
     portfolio_stock_data = Get_the_stock_data.Get_the_stock_portfolio_historical_data_in_the_given_time(US_STOCK_LIST,period)
 
@@ -369,10 +369,12 @@ def portfolio(US_STOCK_LIST, portfolio_wieights, period):
 
     pRet, pStd = portfolio_stock_object.portfolioPerformance(portfolio_weights, mean_portfolio_historical_return_df, covMatrix_portfolio_historical_return_df, Time)
 
-    print(f'For portfolio : {US_STOCK_LIST}')
-    print('Expected Portfolio Return:      ', round(InitialInvestment*pRet,2))
-    print('Value at Risk 95th CI    :      ', round(InitialInvestment*hVaR,2))
-    print('Conditional VaR 95th CI  :      ', round(InitialInvestment*hCVaR,2))
+    # print(f'For portfolio : {US_STOCK_LIST}')
+    # print('Expected Portfolio Return:      ', round(InitialInvestment*pRet,2))
+    # print('Value at Risk 95th CI    :      ', round(InitialInvestment*hVaR,2))
+    # print('Conditional VaR 95th CI  :      ', round(InitialInvestment*hCVaR,2))
+
+    return [round(InitialInvestment*pRet,2), round(InitialInvestment*hVaR,2), round(InitialInvestment*hCVaR,2)]
 
 # portfolio()
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 

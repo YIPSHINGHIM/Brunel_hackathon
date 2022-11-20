@@ -17,7 +17,11 @@ def getRoutes(request):
     weight = calcVar.get_weight(number_of_share, closing_price)
     print(f'weight: {weight}\n')
 
-    calcVar.portfolio(US_STOCK_LIST, weight, 501)
+    pfl = calcVar.portfolio(US_STOCK_LIST, weight, 501)
+    print(f'For portfolio : {US_STOCK_LIST}')
+    print('Expected Portfolio Return:      ', pfl[0])
+    print('Value at Risk 95th CI    :      ', pfl[1])
+    print('Conditional VaR 95th CI  :      ', pfl[2])
 
     return JsonResponse("123",safe=False)
 
